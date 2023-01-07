@@ -29,7 +29,11 @@
         "SearchTerm": "",
         "Results": []
     };
-
+    /**
+     * Check each text object by looping through scannedTextObj
+     * Determine if the text includes searchTerm
+     * If searchTerm is found in the text push ISBN, Page, and Line values to the Results array in the result object
+     */
     for(x = 0; x < scannedTextObj.length; x++) {
         for(y = 0; y < scannedTextObj[x].Content.length; y++) {
             console.log(JSON.stringify(scannedTextObj[x].Content[y].Text))
