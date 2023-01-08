@@ -23,7 +23,9 @@
      * return the appropriate object here. */
     
     //console.log(scannedTextObj[0].Content[0].Text);
-    var termMatches = []
+    if(searchTerm == null || scannedTextObj == null) {
+        return null;
+    }
     
     var result = {
         "SearchTerm": "",
@@ -36,7 +38,7 @@
      */
     for(x = 0; x < scannedTextObj.length; x++) {
         for(y = 0; y < scannedTextObj[x].Content.length; y++) {
-            console.log(JSON.stringify(scannedTextObj[x].Content[y].Text))
+            console.log("Page: "+ scannedTextObj[x].Content[y].Page + " Line: " + scannedTextObj[x].Content[y].Line + " Text: " + scannedTextObj[x].Content[y].Text)
             if(JSON.stringify(scannedTextObj[x].Content[y].Text).includes(searchTerm)) {
                 
                 console.log("Found Term!");
@@ -46,7 +48,7 @@
                     "Line": scannedTextObj[x].Content[y].Line
                 }) 
             }else{
-                console.log("Not found");
+                //console.log("Not found");
             }
         }
     }
@@ -79,6 +81,7 @@ const twentyLeaguesIn = [
     }
 ]
     
+
 /** Example output object */
 const twentyLeaguesOut = {
     "SearchTerm": "the",
@@ -126,3 +129,44 @@ if (test2result.Results.length == 1) {
     console.log("Expected:", twentyLeaguesOut.Results.length);
     console.log("Received:", test2result.Results.length);
 }
+
+//Positive Tests
+/** Given an empty/null input, we get an empty/null output*/
+const test3result = findSearchTermInBooks("", null);
+if (null === test3result) {
+    console.log("PASS: Test 3");
+} else {
+    console.log("FAIL: Test 3");
+    console.log("Expected:", null);
+    console.log("Received:", test3result);
+}
+/** Given a known input on multiple lines we get results on multiple lines as well */
+const test4result = findSearchTermInBooks("w", twentyLeaguesIn); 
+if (test4result.Results.length == 3) {
+    console.log("PASS: Test 4");
+} else {
+    console.log("FAIL: Test 4");
+    console.log("Expected:", 3);
+    console.log("Received:", test4result.Results.length);
+}
+//Negative Tests
+/** Given an invalid input, we get 0 results */
+const test5result = findSearchTermInBooks("apple", twentyLeaguesIn); 
+if (test5result.Results.length == 0) {
+    console.log("PASS: Test 5");
+} else {
+    console.log("FAIL: Test 5");
+    console.log("Expected:", 0);
+    console.log("Received:", test5result.Results.length);
+}
+//Case-sensitive Tests
+/** Given a known uppercase input, the Line output should not equal the Line output of a lowercase input */
+const test6result = findSearchTermInBooks("The", twentyLeaguesIn); 
+if (JSON.stringify(test6result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
+    console.log("PASS: Test 6");
+} else {
+    console.log("FAIL: Test 6");
+    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
+    console.log("Received:", JSON.stringify(test6result.Results[0].Line));
+}
+
